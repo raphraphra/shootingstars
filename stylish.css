@@ -1,0 +1,128 @@
+:root{
+    --text : rgb(236, 220, 220);
+}
+
+body{
+    margin: 0;
+    background: black;
+    overflow: none;
+}
+
+.fa-star{
+    margin: 20px;
+    animation: shooting var(--anime) var(--bezier) 1 forwards;
+    border-radius: 50%;
+    --x : 20px;
+    --y : 20px;
+    position: absolute;
+}
+
+@keyframes shooting {
+
+    0%{
+        filter: hue-rotate(0deg);
+    }
+    
+    to{
+        transform: translate(var(--x), var(--y)) rotateX(20deg) rotateY(70deg) rotateZ(250deg) scale(0);
+        filter: hue-rotate(180deg);
+    }
+}
+
+.header{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: var(--text);
+    margin-top: calc((100vh - 200px) / 2 );
+}
+
+.header > h1{
+   
+    font-size: 3rem;
+    font-family: "Dancing Script", cursive;
+    background: linear-gradient(30deg, violet 90%, aqua 10%);
+    filter: blur(0.5px);
+    background-clip: text;
+    color: transparent;
+    background-size: 200% 200%;
+    animation: shine 5s linear infinite;
+
+}
+
+.header > p{
+    
+    font-style: italic;
+    font-family: "Pacifico", cursive;
+    font-size: 2rem;
+    margin: 0;
+    transition: opacity 200ms linear;
+    animation: hovering 2s cubic-bezier(.17,.67,.47,.9) infinite forwards;
+
+}
+
+@keyframes hovering {
+    0%{
+        scale: 1;
+    }
+    50%{
+        scale: 0.95;
+    }
+    100%{
+        scale: 1;
+    }
+}
+
+@keyframes shine {
+    0%{
+        background-position: 0% 0%;
+        filter: hue-rotate(0deg);
+    }
+    100%{
+        background-position: 200% 0%;
+        filter: hue-rotate(720deg);
+    }
+}
+
+/* for the cursor */
+
+
+.cursor{
+    position: absolute;
+    animation: var(--animation) 0.5s linear 1 forwards;
+    scale: var(--scale);
+    color: var(--color);
+   
+}
+
+@keyframes star1 {
+    0%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(20px) rotateZ(30deg) rotateX(30deg) rotateY(20deg) scale(0);
+    }
+}
+
+@keyframes star2 {
+    0%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(50px) rotateZ(150deg) rotateX(300deg) rotateY(25deg) scale(0);
+    }
+}
+
+@keyframes star3 {
+    0%{
+        opacity: 1;
+    }
+    100%{
+        opacity: 0;
+        transform: translateY(75px) rotateZ(300deg) rotateX(10deg) rotateY(250deg) scale(0);
+    }
+}
+
