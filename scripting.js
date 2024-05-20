@@ -53,6 +53,13 @@ function randBool() {
     return Boolean(Math.round(Math.random()));
 }
 
+function randRange(start, end) {
+    if (start >= end) {
+        throw Error("InvalidRange: range cannot be null or nega")
+    }
+    return Math.floor(Math.random() * (end-start) + start)
+}
+
 function pickFromArray(arr){
 
     return arr[Math.floor(Math.random() * arr.length)];
@@ -71,20 +78,17 @@ window.addEventListener("keydown", e => {
 
 
 
-function generator(){
+function generator() {
     const side = randBool();
     const origin = randBool();
 
-    if (side) {
-        const random_pos1 = Math.floor(Math.random() * (window.innerHeight - window.innerHeight * 0.2) + window.innerHeight * 0.1);
-        const random_pos2 = Math.floor(Math.random() * (window.innerHeight - window.innerHeight * 0.2) + window.innerHeight * 0.1);
-        spawnstars(random_pos1, random_pos2, side, origin)
-    } else {
-        const random_pos1 = Math.floor(Math.random() * (window.innerWidth - window.innerWidth * 0.2) + window.innerWidth * 0.1);
-        const random_pos2 = Math.floor(Math.random() * (window.innerWidth - window.innerWidth * 0.2) + window.innerWidth * 0.1);
-        spawnstars(random_pos1, random_pos2, side, origin)
-    }
-    
+    // your if else statement can be simplified into this:
+    const inner = side ? window.innerHeight : window.innerWidth;
+
+    const random_pos1 = randRange(inner * 0.1, inner * 0.9);
+    const random_pos2 = randRange(inner * 0.1, inner * 0.9);
+
+    spawnstars(random_pos1, random_pos2, side, origin)
 }
 
 function spawnstars(start, end, side, origin){
@@ -144,10 +148,6 @@ function spawnstars(start, end, side, origin){
 
 function getDistance(p1, p2){
     return (Math.sqrt(((p1[0] - p2[0])**2) + ((p1[1] - p2[1])**2)));
-}
-
-function pickFromArray(arr){
-    return arr[Math.floor(Math.random() * arr.length)]
 }
 
 
