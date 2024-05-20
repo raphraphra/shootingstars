@@ -49,6 +49,8 @@ const animation = [
     'star3'
 ]
 
+//-------------------[UTIL FUNCS]-------------------------------//
+
 function randBool() {
     return Boolean(Math.round(Math.random()));
 }
@@ -75,6 +77,14 @@ function getDistance(p1, p2){
 
 }
 
+function setPos(el, x, y) {
+    
+    [el.style.left, el.style.top] = [`${x}px`, `${y}px`];
+
+}
+
+//-------------------------------[MAIN CODE]--------------------------------------//
+
 function generator(e) {
     
     const side = randBool();
@@ -83,72 +93,83 @@ function generator(e) {
     // your if else statement can be simplified into this:
     const inner = side ? window.innerHeight : window.innerWidth;
 
-    const random_pos1 = randRange(inner * 0.1, inner * 0.9);
-    const random_pos2 = randRange(inner * 0.1, inner * 0.9);
+    const randomPos1 = randRange(inner * 0.1, inner * 0.9);
+    const randomPos2 = randRange(inner * 0.1, inner * 0.9);
 
     if (startP.style.display != 'none') {
         startP.style.opacity = 0;
         setTimeout(() => startP.style.display = 'none', 200);
     }
 
-    spawnstars(random_pos1, random_pos2, side, origin)
+    spawnStars(randomPos1, randomPos2, side, origin)
 }
 
-function spawnstars(start, end, side, origin){
+function spawnStars(start, end, side, origin){
 
     const bez = pickFromArray(bezier);
     const animeTime = randRange(750, 1000);
     const inner = side ? window.innerWidth : window.innerHeight;
 
-    const spawnAxis = side ? "--x" : "--y"
-    const traversalAxis = side ? "--y" : "--x"
+    const spawnAxis = side ? "--x" : "--y";
+    const traversalAxis = side ? "--y" : "--x";
 
-    const topOffset = side ? `${start}px` : `${origin ? 25 : inner * 0.80}px`
-    const leftOffset = side ? `${origin ? 25 : inner * 0.80}px` : `${start}px`
+    const offsetY = side ? start : (origin ? 25 : inner * 0.80);
+    const offsetX = side ? (origin ? 25 : inner * 0.80) : start;
     
     const direction = origin ? 1 : -1;
 
     for (const prop of starGen){
         setTimeout(() => {
+
             const star = document.createElement("i");
+
             star.classList.add('fa-solid');
             star.classList.add('fa-star');
             star.classList.add(`fa-${prop.scale}x`);
 
-            star.style.top = topOffset;
-            star.style.left = leftOffset;
+            setPos(star, offsetX, offsetY);
 
             star.style.setProperty(spawnAxis, `${direction * inner * 0.90}px`);
             star.style.setProperty(traversalAxis, `${end-start}px`);
-
             star.style.setProperty('--bezier', bez);
             star.style.setProperty('--anime', `${animeTime}ms`);
+
             star.style.color = pickFromArray(colors);
+
             document.body.appendChild(star);
+
             setTimeout(() => document.body.removeChild(star), animeTime);
-            }, prop.spawn);
+            
+        }, prop.spawn);
             
     }
     
 }
 
 function mouseTrail(e) {
-    const mouseX = e.clientX;
-    const mouseY = e.clientY;
-    const newPos = [mouseX, mouseY]
+
+    const newPos = [e.clientX, e.clientY]
+
     const size = Math.random().toFixed(3)
+
     if (getDistance(pos, newPos) < criticalDist) return;
+
     pos = newPos;
+
     const star = document.createElement('i');
+
     star.classList.add('fa-solid');
     star.classList.add('fa-star');
     star.classList.add('cursor');
-    star.style.setProperty('--scale', 1 + Number(size) * 1.5);
+
+    star.style.setProperty('--scale', 1 + size * 1.5);
     star.style.setProperty('--color', pickFromArray(cursorColors));
     star.style.setProperty('--animation', pickFromArray(animation));
-    star.style.top = `${mouseY}px`;
-    star.style.left = `${mouseX}px`;
+
+    setPos(star, pos[0], pos[1]);
+
     document.body.appendChild(star);
+
     setTimeout(() => document.body.removeChild(star), 2000);
 }
 
