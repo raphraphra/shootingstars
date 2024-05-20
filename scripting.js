@@ -29,7 +29,7 @@ const bezier = [
 
 //-------------------[CURSOR VARIABLES]---------------------------//
 
-let pos = [0,0]
+let pos = [0,0];
 
 const criticalDist = 50;
 
@@ -54,10 +54,13 @@ function randBool() {
 }
 
 function randRange(start, end) {
+
     if (start >= end) {
-        throw Error("InvalidRange: range cannot be null or nega")
+        throw Error("InvalidRange: range cannot be null or negative");
     }
-    return Math.floor(Math.random() * (end-start) + start)
+
+    return Math.floor(Math.random() * (end-start) + start);
+
 }
 
 function pickFromArray(arr){
@@ -66,19 +69,14 @@ function pickFromArray(arr){
 
 }
 
-window.addEventListener("keydown", e => {
-    if (startP.style.display != 'none') {
-        startP.style.opacity = 0;
-        setTimeout(() => {
-            startP.style.display = 'none';
-        }, 200)
-    }
-    generator();
-});
+function getDistance(p1, p2){
 
+    return Math.sqrt((p1[0] - p2[0]) ** 2 + (p1[1] - p2[1]) ** 2);
 
+}
 
-function generator() {
+function generator(e) {
+    
     const side = randBool();
     const origin = randBool();
 
@@ -88,88 +86,71 @@ function generator() {
     const random_pos1 = randRange(inner * 0.1, inner * 0.9);
     const random_pos2 = randRange(inner * 0.1, inner * 0.9);
 
+    if (startP.style.display != 'none') {
+        startP.style.opacity = 0;
+        setTimeout(() => startP.style.display = 'none', 200);
+    }
+
     spawnstars(random_pos1, random_pos2, side, origin)
 }
 
 function spawnstars(start, end, side, origin){
-    if (side){
-        const bez = pickFromArray(bezier)
-        const animeTime = Math.floor(Math.random() * 250 + 750);
-        for (const prop of starGen){
-            setTimeout(() => {
-                const star = document.createElement("i");
-                star.classList.add('fa-solid');
-                star.classList.add('fa-star');
-                star.classList.add(`fa-${prop.scale}x`)
-                star.style.top = `${start}px`;
-                star.style.left = `${origin ? 25 : window.innerWidth * 0.80}px`
-                star.style.setProperty('--x', `${(origin ? 1 : -1) * window.innerWidth * 0.90}px`)
-                star.style.setProperty('--y', `${end-start}px`)
-                star.style.setProperty('--bezier', bez)
-                star.style.setProperty('--anime', `${animeTime}ms`)
-                star.style.color = pickFromArray(colors)
-                document.body.appendChild(star)
-                setTimeout(() => {
-                    document.body.removeChild(star)
-                }, animeTime)
-                }, prop.spawn)
-            
-        }
-        
-    } else {
-        const bez = pickFromArray(bezier)
-        const animeTime = Math.floor(Math.random() * 250 + 750);
-        for (const prop of starGen){
-            setTimeout(() => {
-                const star = document.createElement("i");
-                star.classList.add('fa-solid');
-                star.classList.add('fa-star');
-                star.classList.add(`fa-${prop.scale}x`)
-                star.style.left = `${start}px`;
-                star.style.top = `${origin ? 25 : window.innerHeight * 0.80}px`
-                star.style.setProperty('--y', `${(origin ? 1 : -1) * window.innerHeight * 0.90}px`)
-                star.style.setProperty('--x', `${end-start}px`)
-                star.style.setProperty('--bezier', bez)
-                star.style.setProperty('--anime', `${animeTime}ms`)
-                star.style.color = pickFromArray(colors)
-                document.body.appendChild(star)
-                setTimeout(() => {
-                    document.body.removeChild(star)
-                }, animeTime)
-                }, prop.spawn)
-            
-        }
+
+    const bez = pickFromArray(bezier);
+    const animeTime = randRange(750, 1000);
+    const inner = side ? window.innerWidth : window.innerHeight;
+
+    const spawnAxis = side ? "--x" : "--y"
+    const traversalAxis = side ? "--y" : "--x"
+
+    const topOffset = side ? `${start}px` : `${origin ? 25 : inner * 0.80}px`
+    const leftOffset = side ? `${origin ? 25 : inner * 0.80}px` : `${start}px`
     
+    const direction = origin ? 1 : -1;
+
+    for (const prop of starGen){
+        setTimeout(() => {
+            const star = document.createElement("i");
+            star.classList.add('fa-solid');
+            star.classList.add('fa-star');
+            star.classList.add(`fa-${prop.scale}x`);
+
+            star.style.top = topOffset;
+            star.style.left = leftOffset;
+
+            star.style.setProperty(spawnAxis, `${direction * inner * 0.90}px`);
+            star.style.setProperty(traversalAxis, `${end-start}px`);
+
+            star.style.setProperty('--bezier', bez);
+            star.style.setProperty('--anime', `${animeTime}ms`);
+            star.style.color = pickFromArray(colors);
+            document.body.appendChild(star);
+            setTimeout(() => document.body.removeChild(star), animeTime);
+            }, prop.spawn);
+            
     }
     
 }
 
-
-
-function getDistance(p1, p2){
-    return (Math.sqrt(((p1[0] - p2[0])**2) + ((p1[1] - p2[1])**2)));
-}
-
-
-window.onmousemove = e => {
-
+function mouseTrail(e) {
     const mouseX = e.clientX;
     const mouseY = e.clientY;
     const newPos = [mouseX, mouseY]
     const size = Math.random().toFixed(3)
-    if (getDistance(pos, newPos) < criticalDist){return;}
+    if (getDistance(pos, newPos) < criticalDist) return;
     pos = newPos;
     const star = document.createElement('i');
     star.classList.add('fa-solid');
     star.classList.add('fa-star');
-    star.classList.add('cursor')
+    star.classList.add('cursor');
     star.style.setProperty('--scale', 1 + Number(size) * 1.5);
-    star.style.setProperty('--color', pickFromArray(cursorColors))
-    star.style.setProperty('--animation', pickFromArray(animation))
+    star.style.setProperty('--color', pickFromArray(cursorColors));
+    star.style.setProperty('--animation', pickFromArray(animation));
     star.style.top = `${mouseY}px`;
     star.style.left = `${mouseX}px`;
     document.body.appendChild(star);
-    setTimeout(() => {
-        document.body.removeChild(star)
-    }, 2000)
+    setTimeout(() => document.body.removeChild(star), 2000);
 }
+
+window.addEventListener("mousemove", mouseTrail);
+window.addEventListener("keydown", generator);
