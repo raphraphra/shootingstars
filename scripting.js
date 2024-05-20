@@ -41,13 +41,13 @@ const cursorColors = [
     'crimson', 
     'turquoise', 
     'aqua'
-]
+];
 
 const animation = [
     'star1',
     'star2', 
     'star3'
-]
+];
 
 //-------------------[UTIL FUNCS]-------------------------------//
 
@@ -101,7 +101,7 @@ function generator(e) {
         setTimeout(() => startP.style.display = 'none', 200);
     }
 
-    spawnStars(randomPos1, randomPos2, side, origin)
+    spawnStars(randomPos1, randomPos2, side, origin);
 }
 
 function spawnStars(start, end, side, origin){
@@ -148,9 +148,9 @@ function spawnStars(start, end, side, origin){
 
 function mouseTrail(e) {
 
-    const newPos = [e.clientX, e.clientY]
+    const newPos = [e.clientX, e.clientY];
 
-    const size = Math.random().toFixed(3)
+    const size = Math.random().toFixed(3);
 
     if (getDistance(pos, newPos) < criticalDist) return;
 
