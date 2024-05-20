@@ -1,40 +1,81 @@
-// For the shooting stars
-
-const starGen = [{'scale' : 4, 'spawn' : 0},
-                {'scale' : 3, 'spawn' : 50},
-                {'scale' : 2 , 'spawn' : 100},
-                {'scale' : 1, 'spawn' : 150}
-                ]
-
-const colors = ['red', 'green', 'yellow', 'purple', 'indigo', 'blue', 'crimson', 'magenta','royalblue']
-
-const bezier = ['cubic-bezier(.72,.46,.72,.7)',
-                'cubic-bezier(.65,.46,.72,.7)',
-                'cubic-bezier(.48,.59,.72,.7)',
-                ]
-
-
 const startP = document.getElementById('startP');
 
-function pickFromArray(arr){
-    return arr[Math.floor(Math.random() * arr.length)]
+//-------------------[STAR VARIABLES]---------------------------//
+
+const starGen = [
+    {'scale' : 4, 'spawn' : 0},
+    {'scale' : 3, 'spawn' : 50},
+    {'scale' : 2 , 'spawn' : 100},
+    {'scale' : 1, 'spawn' : 150}
+];
+
+const colors = [
+    'red',
+    'green',
+    'yellow', 
+    'purple', 
+    'indigo', 
+    'blue', 
+    'crimson', 
+    'magenta',
+    'royalblue'
+];
+
+const bezier = [
+    'cubic-bezier(.72,.46,.72,.7)',     
+    'cubic-bezier(.65,.46,.72,.7)',
+    'cubic-bezier(.48,.59,.72,.7)',
+];
+
+//-------------------[CURSOR VARIABLES]---------------------------//
+
+let pos = [0,0]
+
+const criticalDist = 50;
+
+const cursorColors = [
+    'blue',
+    'pink',
+    'purple',
+    'red', 
+    'crimson', 
+    'turquoise', 
+    'aqua'
+]
+
+const animation = [
+    'star1',
+    'star2', 
+    'star3'
+]
+
+function randBool() {
+    return Boolean(Math.round(Math.random()));
 }
 
-window.onkeydown = e => {
+function pickFromArray(arr){
+
+    return arr[Math.floor(Math.random() * arr.length)];
+
+}
+
+window.addEventListener("keydown", e => {
     if (startP.style.display != 'none') {
         startP.style.opacity = 0;
         setTimeout(() => {
-            startP.style.display = 'none'
+            startP.style.display = 'none';
         }, 200)
     }
-    generator()
-}
+    generator();
+});
+
 
 
 function generator(){
-    const side = Boolean(Math.floor(Math.random() * 2) % 2)
-    const origin = Boolean(Math.floor(Math.random() * 2) % 2)
-    if (side){
+    const side = randBool();
+    const origin = randBool();
+
+    if (side) {
         const random_pos1 = Math.floor(Math.random() * (window.innerHeight - window.innerHeight * 0.2) + window.innerHeight * 0.1);
         const random_pos2 = Math.floor(Math.random() * (window.innerHeight - window.innerHeight * 0.2) + window.innerHeight * 0.1);
         spawnstars(random_pos1, random_pos2, side, origin)
@@ -43,6 +84,7 @@ function generator(){
         const random_pos2 = Math.floor(Math.random() * (window.innerWidth - window.innerWidth * 0.2) + window.innerWidth * 0.1);
         spawnstars(random_pos1, random_pos2, side, origin)
     }
+    
 }
 
 function spawnstars(start, end, side, origin){
@@ -98,12 +140,7 @@ function spawnstars(start, end, side, origin){
     
 }
 
-// for the cursor stars
 
-let pos = [0,0]
-const criticalDist = 50;
-const cursorColors = ['blue', 'pink', 'purple','red', 'crimson' , 'turquoise', 'aqua']
-const animation = ['star1', 'star2', 'star3']
 
 function getDistance(p1, p2){
     return (Math.sqrt(((p1[0] - p2[0])**2) + ((p1[1] - p2[1])**2)));
