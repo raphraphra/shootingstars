@@ -52,7 +52,9 @@ const animation = [
 //-------------------[UTIL FUNCS]-------------------------------//
 
 function randBool() {
+
     return Boolean(Math.round(Math.random()));
+    
 }
 
 function randRange(start, end) {
